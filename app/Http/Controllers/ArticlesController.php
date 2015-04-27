@@ -55,10 +55,8 @@ class ArticlesController extends Controller {
     {
         Auth::user()->articles()->create($request->all());
 
-        return redirect('articles')->with([
-            'flash_message' => 'Your article has been created',
-            'flash_message_important' => true
-        ]);
+        flash()->success('Your article has been created')->important();
+        return redirect('articles');
     }
 
     /**

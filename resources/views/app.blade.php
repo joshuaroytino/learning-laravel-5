@@ -54,7 +54,7 @@
 	</nav>
 
     <div class="container">
-        @include('partials._flash')
+        @include('flash::message')
         @yield('content')
     </div>
 	<!-- Scripts -->
