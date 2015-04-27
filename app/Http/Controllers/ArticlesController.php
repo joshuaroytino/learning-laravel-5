@@ -30,11 +30,13 @@ class ArticlesController extends Controller {
 
 
     /**
-     * @param Article $article
+     * @param $id
      * @return \Illuminate\View\View
      */
-    public function show(Article $article)
+    public function show($id)
     {
+        $article = Article::findOrFail($id);
+
         return view('articles.show', compact('article'));
     }
 
@@ -61,23 +63,25 @@ class ArticlesController extends Controller {
     }
 
     /**
-     * @param Article $article
-     * @internal param $id
+     * @param $id
      * @return \Illuminate\View\View
      */
-    public function edit(Article $article)
+    public function edit($id)
     {
+        $article = Article::findOrFail($id);
+
         return view('articles.edit',  compact('article'));
     }
 
     /**
-     * @param Article $article
+     * @param $id
      * @param ArticleRequest $request
-     * @internal param $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Article $article, ArticleRequest $request)
+    public function update($id, ArticleRequest $request)
     {
+        $article = Article::findOrFail($id);
+
         $article->update($request->all());
 
         return redirect('articles');
