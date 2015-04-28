@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Article;
+use App\Tag;
 use Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -43,7 +44,8 @@ class ArticlesController extends Controller {
      */
     public function create()
     {
-        return view('articles.create');
+        $tags = Tag::lists('name', 'id');
+        return view('articles.create', compact('tags'));
     }
 
     /**
@@ -53,7 +55,9 @@ class ArticlesController extends Controller {
 
     public function store(ArticleRequest $request)
     {
-        Auth::user()->articles()->create($request->all());
+        $article = Auth::user()->articles()->create($request->all());
+
+        $article->tags()->attach($request->input('tags'));
 
         flash()->success('Your article has been created')->important();
         return redirect('articles');
@@ -66,7 +70,8 @@ class ArticlesController extends Controller {
      */
     public function edit(Article $article)
     {
-        return view('articles.edit',  compact('article'));
+        $tags = Tag::lists('name', 'id');
+        return view('articles.edit',  compact('article', 'tags'));
     }
 
     /**
