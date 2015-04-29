@@ -57,7 +57,7 @@ class ArticlesController extends Controller {
     {
         $article = Auth::user()->articles()->create($request->all());
 
-        $article->tags()->attach($request->input('tags'));
+        $article->tags()->attach($request->input('tag_list'));
 
         return redirect('articles')->with([
             'flash_message' => 'Your article has been created',
