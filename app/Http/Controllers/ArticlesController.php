@@ -88,7 +88,10 @@ class ArticlesController extends Controller {
 
         $this->syncTags($article, $request->input('tag_list'));
 
-        return redirect('articles');
+        return redirect('articles')->with([
+            'flash_message' => 'Your article has been updated',
+            'flash_message_important' => true
+        ]);
     }
 
     /**
@@ -98,9 +101,9 @@ class ArticlesController extends Controller {
      * @param array $tags
      * @internal param ArticleRequest $request
      */
-    private function syncTags(Article $article, array $tags)
+    private function syncTags(Article $article, $tags)
     {
-        $article->tags()->sync($tags);
+        $article->tags()->sync((array) $tags);
     }
 
     /**
