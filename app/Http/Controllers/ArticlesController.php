@@ -14,6 +14,9 @@ use App\Http\Requests\ArticleRequest;
  */
 class ArticlesController extends Controller {
 
+    /**
+     * Create a new articles controller instance.
+     */
     function __construct()
     {
         $this->middleware('auth', [ 'only' => 'create']);
@@ -45,6 +48,7 @@ class ArticlesController extends Controller {
     public function create()
     {
         $tags = Tag::lists('name', 'id');
+
         return view('articles.create', compact('tags'));
     }
 
@@ -55,9 +59,7 @@ class ArticlesController extends Controller {
 
     public function store(ArticleRequest $request)
     {
-        $article = Auth::user()->articles()->create($request->all());
-
-        $article->tags()->attach($request->input('tags'));
+        $this->createArticle($request);
 
         flash()->success('Your article has been created')->important();
         return redirect('articles');
@@ -84,6 +86,34 @@ class ArticlesController extends Controller {
     {
         $article->update($request->all());
 
+        $this->syncTags($article, $request->input('tag_list'));
+
         return redirect('articles');
+    }
+
+    /**
+     * Sync up the list of tags in the database
+     *
+     * @param Article $article
+     * @param array $tags
+     * @internal param ArticleRequest $request
+     */
+    private function syncTags(Article $article, array $tags)
+    {
+        $article->tags()->sync($tags);
+    }
+
+    /**
+     * Save a new article
+     *
+     * @param ArticleRequest $request
+     */
+    private function createArticle(ArticleRequest $request)
+    {
+        $article = Auth::user()->articles()->create($request->all());
+
+        $this->syncTags($article, $request->input('tag_list'));
+
+        return $article;
     }
 }
