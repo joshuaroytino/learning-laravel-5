@@ -8,22 +8,16 @@ use Illuminate\Http\Request;
 
 class FooController extends Controller {
 
+
     /**
-     * This is constructor injection
+     * This is method injection
      *
-     * @var FooRepository
+     * @param FooRepository $repository
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    private $repository;
-
-    public function __construct(FooRepository $repository)
+    public function foo(FooRepository $repository)
     {
-
-        $this->repository = $repository;
-    }
-
-	public function foo()
-    {
-        return $this->repository->get();
+        return $repository->get();
     }
 
 }
